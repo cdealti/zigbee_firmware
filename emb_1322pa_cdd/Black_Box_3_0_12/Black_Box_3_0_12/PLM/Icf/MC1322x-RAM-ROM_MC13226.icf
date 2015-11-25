@@ -1,0 +1,165 @@
+define memory Mem with size = 4G;
+
+/* Memory Configuration when using external flash bootloader (for OTA image storage) */
+if (gUseBootloaderLink_d)
+{
+  /* Vectors at RAM start region limits (1st Mirrored Flash Sector */
+  define symbol VECT_START  = 0x00400000;
+  define symbol VECT_END    = 0x0040001F;
+  
+  /* ROM patch vector region limits */
+  /* In bootloader configurations the patch vectors are  */ 
+  /* copied from 4001020 from the application space */
+  define symbol RPTV_0_REDIRECT_START = 0x00400020;
+  define symbol RPTV_0_REDIRECT_END   = 0x0040005F;
+  define symbol RPTV_1_REDIRECT_START = 0x00400060;
+  define symbol RPTV_1_REDIRECT_END   = 0x0040009F;
+  define symbol RPTV_2_REDIRECT_START = 0x004000A0;
+  define symbol RPTV_2_REDIRECT_END   = 0x004000DF;
+  define symbol RPTV_3_REDIRECT_START = 0x004000E0;
+  define symbol RPTV_3_REDIRECT_END   = 0x0040011F;
+  
+  /* RAM area between 0x00400120 - 0x004009FF is reserved for variables declared in ROM */
+  /* Also using it for bootloader code as the bootloader does not make ROM calls */
+  define symbol BOOTLOADER_REGION1_START  = 0x00400120;
+  define symbol BOOTLOADER_REGION1_END    = 0x004009FF;
+  
+  /* Initialization data such as MAC address and Crystal Trim */
+  define symbol NV_DATA_INIT_STRUCT_START = 0x00400A00;
+  define symbol NV_DATA_INIT_STRUCT_END   = 0x00400AFF;
+  
+  /* Bootloader NV code functions (ends at 1st and 2nd Flash sector boundry) */
+  define symbol BOOTLOADER_REGION2_START  = 0x00400B00;
+  define symbol BOOTLOADER_REGION2_END    = 0x00400FF7;
+  
+  /* Start of RAM corresponding to Flash sector 2 and onwards 
+   * not really used in RAM; This place is used in Flash to store 
+   * the actual image length for OTA images */
+  define symbol APP_VECT_START  = 0x00400FF8;
+  define symbol APP_VECT_END    = 0x0040101F;
+  
+  /* Actual patch vector region limits in bootloader configurations  */
+  define symbol RPTV_0_START = 0x00401020;
+  define symbol RPTV_0_END   = 0x0040105F;
+  define symbol RPTV_1_START = 0x00401060;
+  define symbol RPTV_1_END   = 0x0040109F;
+  define symbol RPTV_2_START = 0x004010A0;
+  define symbol RPTV_2_END   = 0x004010DF;
+  define symbol RPTV_3_START = 0x004010E0;
+  define symbol RPTV_3_END   = 0x0040111F;
+  
+  /* Rest of RAM/mirrored flash */
+  define symbol RAM_START  = 0x00401120;
+  define symbol RAM_END    = 0x004176C7;
+  
+  /* Put stack at the end of the RAM space */
+  define symbol STACK_START = 0x004176C0;
+  define symbol STACK_END = 0x00417FF7;
+  
+  /* Add a placeholder variable at the end of RAM/Mirrored flash 
+   * so that bootloader images always have MAX RAM length. See 
+   * Bootloader.c for details */
+  define symbol IMAGE_END_MARKER_START = 0x00417FF8;
+  define symbol IMAGE_END_MARKER_END = 0x00417FFF;
+  
+  /* Flash Sector 1 (not erased by bootloader) */
+  define region VECT_region = Mem:[from VECT_START to VECT_END];
+  define region RPTV_0_REDIRECT_region = Mem:[from RPTV_0_REDIRECT_START  to RPTV_0_REDIRECT_END];
+  define region RPTV_1_REDIRECT_region = Mem:[from RPTV_1_REDIRECT_START  to RPTV_1_REDIRECT_END];
+  define region RPTV_2_REDIRECT_region = Mem:[from RPTV_2_REDIRECT_START  to RPTV_2_REDIRECT_END];
+  define region RPTV_3_REDIRECT_region = Mem:[from RPTV_3_REDIRECT_START  to RPTV_3_REDIRECT_END];
+  define region BOOTLOADER_CODE_REGION1_region  = Mem:[from BOOTLOADER_REGION1_START  to BOOTLOADER_REGION1_END];
+  define region INIT_region = Mem:[from NV_DATA_INIT_STRUCT_START  to NV_DATA_INIT_STRUCT_END];
+  define region BOOTLOADER_CODE_REGION2_region  = Mem:[from BOOTLOADER_REGION2_START  to BOOTLOADER_REGION2_END];
+  
+  /* Flash Sector 2+ */
+  define region APP_VECT_region = Mem:[from APP_VECT_START to APP_VECT_END];
+  define region RPTV_0_region = Mem:[from RPTV_0_START  to RPTV_0_END];
+  define region RPTV_1_region = Mem:[from RPTV_1_START  to RPTV_1_END];
+  define region RPTV_2_region = Mem:[from RPTV_2_START  to RPTV_2_END];
+  define region RPTV_3_region = Mem:[from RPTV_3_START  to RPTV_3_END];
+  define region RAM_region  = Mem:[from RAM_START  to RAM_END];
+  define region STACK_region  = Mem:[from STACK_START  to STACK_END];
+  define region IMAGE_END_region  = Mem:[from IMAGE_END_MARKER_START  to IMAGE_END_MARKER_END];
+  
+  do not initialize     { readwrite section .stack};
+  initialize by copy with packing = zeros   { readwrite };
+  
+  place in VECT_region  { readonly section first_sector_vect };
+  place in RPTV_0_REDIRECT_region  { section rp_vector_redirect_0 };
+  place in RPTV_1_REDIRECT_region  { section rp_vector_redirect_1 };
+  place in RPTV_2_REDIRECT_region  { section rp_vector_redirect_2 };
+  place in RPTV_3_REDIRECT_region  { section rp_vector_redirect_3 };
+  place at address Mem:BOOTLOADER_REGION2_START {readonly section first_sector_start };
+  place in BOOTLOADER_CODE_REGION1_region { readonly section BOOTLOADER_CODE_1 };
+  place in INIT_region  { section nv_data_init_struct };
+  place in BOOTLOADER_CODE_REGION2_region { readonly section BOOTLOADER_CODE_2 };
+  
+  place in APP_VECT_region  { readonly section second_sector_vect };
+  place in RPTV_0_region  { section rp_vector_thumb_0 };
+  place in RPTV_1_region  { section rp_vector_thumb_1 };
+  place in RPTV_2_region  { section rp_vector_thumb_2 };
+  place in RPTV_3_region  { section rp_vector_thumb_3 };
+  place at address Mem:RAM_START {readonly section second_sector_start };
+  place in IMAGE_END_region { section IMAGE_END_section };
+  keep { section IMAGE_END_section };
+  
+  place in RAM_region   { readonly };
+  place in STACK_region   { section .stack };
+  place in RAM_region   { readwrite };
+}
+else
+{  
+    /* Memory Configuration when NOT using external flash bootloader */
+    define symbol VECT_START  = 0x00400000;
+    define symbol VECT_END    = 0x0040001F;
+
+    /* rp_vector_thumb */
+    define symbol RPTV_0_START = 0x00400020;
+    define symbol RPTV_0_END   = 0x0040005F;
+    define symbol RPTV_1_START = 0x00400060;
+    define symbol RPTV_1_END   = 0x0040009F;
+    define symbol RPTV_2_START = 0x004000A0;
+    define symbol RPTV_2_END   = 0x004000DF;
+    define symbol RPTV_3_START = 0x004000E0;
+    define symbol RPTV_3_END   = 0x0040011F;
+
+    /* RAM area between 0x00400120 - 0x004008FF is reserved for variables declared in ROM */
+    //define symbol RAM_ROM_START = 0x00400120;
+    //define symbol RAM_ROM_END   = 0x004009FF;
+
+    define symbol NV_DATA_INIT_STRUCT_START = 0x00400A00;
+    define symbol NV_DATA_INIT_STRUCT_END   = 0x00400AFF;
+
+    define symbol RAM_START   = 0x00400B00;
+    define symbol RAM_END     = 0x00417FFF;
+
+
+    /*-Memory Regions-*/
+    define region VECT_region = Mem:[from VECT_START to VECT_END];
+    define region RAM_region  = Mem:[from RAM_START  to RAM_END];
+    define region INIT_region = Mem:[from NV_DATA_INIT_STRUCT_START  to NV_DATA_INIT_STRUCT_END];
+
+    define region RPTV_0_region = Mem:[from RPTV_0_START  to RPTV_0_END];
+    define region RPTV_1_region = Mem:[from RPTV_1_START  to RPTV_1_END];
+    define region RPTV_2_region = Mem:[from RPTV_2_START  to RPTV_2_END];
+    define region RPTV_3_region = Mem:[from RPTV_3_START  to RPTV_3_END];
+
+    do not initialize     { readwrite section .stack};
+    do not initialize     { readwrite section .noinit};
+    initialize by copy    { readwrite };
+
+    /* BEGIN - MARKER */
+    /* END - MARKER */
+
+    place in VECT_region  { readonly section .vect };
+    place in RAM_region   { readonly };
+    place in RAM_region   { readwrite };
+
+    place in RPTV_0_region  { section rp_vector_thumb_0 };
+    place in RPTV_1_region  { section rp_vector_thumb_1 };
+    place in RPTV_2_region  { section rp_vector_thumb_2 };
+    place in RPTV_3_region  { section rp_vector_thumb_3 };
+
+    place in INIT_region  { section nv_data_init_struct };
+}

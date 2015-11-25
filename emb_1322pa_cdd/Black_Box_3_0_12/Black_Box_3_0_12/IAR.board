@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<flash_board>
+  <pass>
+    <loader>$PROJ_DIR$\PLM\FlashLoader\FlashMC1322x.out</loader>
+    <args>-eraseall</args>
+  </pass>
+</flash_board>
+
+

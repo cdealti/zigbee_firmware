@@ -1,0 +1,20 @@
+
+// Resets the target and runs until the given address is reached,
+// or the timeout expires.
+// NOTE that the address must be given as a value, not as a symbol, since
+// symbols are not loaded yet.
+execUserFlashExit()
+{
+  __var runTime;
+  __var appStartAddr;
+  __message("execFlashExit called");
+
+  __message("Target reset, wait until bootloader finishes !");
+
+  // Reset and run bootloader until breakpoint hit, or max 10 seconds.
+  appStartAddr = 0x400000; // _start_vector_
+  runTime = __hwResetRunToBp(0,appStartAddr,10000);
+  __message "Boot loader runtime is approximately: ",runTime," ms";
+
+ __message("execUserFlashExit exits");
+}
