@@ -1000,7 +1000,7 @@
 
 /*Compiler time option to compile out Simple Descriptor Request*/
 #ifndef gSimple_Desc_req_d
-#define gSimple_Desc_req_d  FALSE
+#define gSimple_Desc_req_d  TRUE
 #endif
 
 #ifndef gSimple_Desc_rsp_d  /* The command is Mandatory on the server side */
@@ -1018,7 +1018,7 @@
 #endif
 /*Compiler time option to compile out Active End Point Request*/
 #ifndef gActive_EP_req_d
-#define gActive_EP_req_d  FALSE
+#define gActive_EP_req_d  TRUE
 #endif
 
 #ifndef gActive_EP_rsp_d  /* The command is Mandatory on the server side */

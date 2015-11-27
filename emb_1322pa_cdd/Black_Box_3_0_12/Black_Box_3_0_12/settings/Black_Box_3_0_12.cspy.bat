@@ -22,7 +22,7 @@
 @REM but they are listed at the end of this file for reference.
 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 5.4\common\bin\cspybat" "C:\Program Files\IAR Systems\Embedded Workbench 5.4\arm\bin\armproc.dll" "C:\Program Files\IAR Systems\Embedded Workbench 5.4\arm\bin\armjlink.dll"  %1 --plugin "C:\Program Files\IAR Systems\Embedded Workbench 5.4\arm\bin\<libsupport_plugin>" --macro "C:\Users\IEUser\Documents\Black_Box_3_0_12\Black_Box_3_0_12\PLM\FlashLoader\FlashMC1322x.mac" --flash_loader "C:\Users\IEUser\Documents\Black_Box_3_0_12\Black_Box_3_0_12\IAR.board" --backend -B "--endian=little" "--cpu=ARM7TDMI-S" "--fpu=None" "--semihosting=none" "--drv_communication=USB0" "--jlink_speed=2000" 
+"C:\Program Files\IAR Systems\Embedded Workbench 5.4\common\bin\cspybat" "C:\Program Files\IAR Systems\Embedded Workbench 5.4\arm\bin\armproc.dll" "C:\Program Files\IAR Systems\Embedded Workbench 5.4\arm\bin\armjlink.dll"  %1 --plugin "C:\Program Files\IAR Systems\Embedded Workbench 5.4\arm\bin\<libsupport_plugin>" --macro "C:\Users\IEUser\Documents\git\zigbee_firmware\emb_1322pa_cdd\Black_Box_3_0_12\Black_Box_3_0_12\PLM\FlashLoader\FlashMC1322x.mac" --flash_loader "C:\Users\IEUser\Documents\git\zigbee_firmware\emb_1322pa_cdd\Black_Box_3_0_12\Black_Box_3_0_12\IAR.board" --backend -B "--endian=little" "--cpu=ARM7TDMI-S" "--fpu=None" "--semihosting=none" "--drv_communication=USB0" "--jlink_speed=2000" 
 
 
 @REM Loaded plugins:

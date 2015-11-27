@@ -1837,7 +1837,7 @@
             required simple descriptor.
           </temp:description>
                       <temp:regExLib name="define" param1="gSimple_Desc_req_d" />
-                      <beeapps:value>false</beeapps:value>
+                      <beeapps:value>true</beeapps:value>
                     </beeapps:Simple_Desc_req>
                     <beeapps:Simple_Desc_rsp displayName="ZDP: Enable Simple_Desc_rsp">
                       <temp:description>
@@ -1897,7 +1897,7 @@
 
         </temp:description>
                       <temp:regExLib name="define" param1="gActive_EP_req_d" />
-                      <beeapps:value>false</beeapps:value>
+                      <beeapps:value>true</beeapps:value>
                     </beeapps:Active_EP_req>
                     <beeapps:Active_EP_rsp displayName="ZDP: Enable Active_EP_rsp">
                       <temp:description>
@@ -4408,20 +4408,20 @@ bits must be 1.
 			Enables or disables the output power lock in the -6 to -4dBm range for channels 11-25. <br />To change the setting launch the User Defined Target Editor by pressing the [...] button on the right side of the property.<br /><br /><b>This setting will have effect only for a User Defined Target.</b></temp:description>
                   <temp:regExLib name="define" param1="gPowerLevelLock_c" />
                   <temp:readonly value="true" />
-                  <plm:value>True</plm:value>
+                  <plm:value>TRUE</plm:value>
                 </plm:gPowerLevelLock_c>
                 <plm:gEnableComplementaryPAOutput_c displayName="Enable complementary PA output" editor="BeeKitARM7PlatformEditorV05">
                   <temp:description />
                   <temp:regExLib name="define" param1="gEnableComplementaryPAOutput_c" />
                   <temp:readonly value="true" />
-                  <plm:value>False</plm:value>
+                  <plm:value>TRUE</plm:value>
                 </plm:gEnableComplementaryPAOutput_c>
                 <plm:gDualPortRFOperation_c displayName="Enable Hardware RF Control Signals" editor="BeeKitARM7PlatformEditorV05">
                   <temp:description>
 			Enables or disables dual port RF operation. <br />To change the setting launch the User Defined Target Editor by pressing the [...] button on the right side of the property.<br /><br /><b>This setting will have effect only for a User Defined Target.</b></temp:description>
                   <temp:regExLib name="define" param1="gDualPortRFOperation_c" />
                   <temp:readonly value="true" />
-                  <plm:value>False</plm:value>
+                  <plm:value>TRUE</plm:value>
                 </plm:gDualPortRFOperation_c>
                 <plm:gDefaultPowerLevel_c displayName="Default power level">
                   <temp:description>
